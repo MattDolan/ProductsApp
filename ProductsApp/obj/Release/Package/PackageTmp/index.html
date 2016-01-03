@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Product App</title>
+</head>
+<body>
+
+    <div>
+        <h2>All Products</h2>
+        <ul id="products" />
+    </div>
+    <div>
+        <h2>Search by ID</h2>
+        <input type="text" id="prodId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <p id="product" />
+    </div>
+
+    <div>
+        <h2>Search customers by ID</h2>
+        <input type="text" id="custId" size="5" />
+        <input type="button" value="Search" onclick="find2();" />
+        <p id="customer" />
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+
+    var uri = 'api/products';
+    var uri2 = 'api/customers';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+      $.getJSON(uri)
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+                $('<li>', { text: item.Name + ': $' + item.Price }).appendTo($('#products'));
+            });
+          });
+    });
+
+    function find() {
+      var id = $('#prodId').val();
+      $.getJSON(uri + '/' + id)
+          .done(function (data) {
+              $('#product').text(data.Name + ': $' + data.Price);
+          })
+          .fail(function (jqXHR, textStatus, err) {
+              $('#product').text('YOU HAVE AN ERROR Error: ' + err);
+          });
+    }
+
+    function find2() {
+        var id = $('#custId').val();
+        $.getJSON(uri2 + '/' + id)
+            .done(function (data) {
+                $('#customer').text('Company ' + data.Company);
+            })
+            .fail(function (jqXHR, textStatus, err) {
+                $('#customer').text('ERROR!!: ' + err);
+            });
+    }
+
+    </script>
+</body>
+</html>
